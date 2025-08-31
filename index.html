@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamLive - Tu Plataforma de Transmisión</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>LiveStream - Transmite en Vivo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,284 +14,42 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff4500 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
-            width: 100vw;
-            height: 100vh;
-        }
-
-        .container {
-            width: 100vw;
-            height: 100vh;
-            background: white;
-            position: relative;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #f8e8ff 100%);
             overflow: hidden;
         }
 
-        .page {
-            display: none;
-            width: 100%;
-            height: 100vh;
-            position: absolute;
+        /* Pantalla de Carga */
+        .screen {
+            position: fixed;
             top: 0;
             left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #ffeef8 0%, #f8e8ff 100%);
+            z-index: 1000;
         }
 
-        .page.active {
+        .screen.active {
             display: flex;
+        }
+
+        #loading-screen {
             flex-direction: column;
-        }
-
-        /* Auth Page */
-        .auth-page {
-            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 40px;
-        }
-
-        .logo {
-            width: 120px;
-            height: 120px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .logo i {
-            font-size: 50px;
-            color: #ff6b35;
-        }
-
-        h1 {
-            color: white;
-            font-size: 36px;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-
-        .subtitle {
-            color: rgba(255,255,255,0.9);
-            font-size: 18px;
-            margin-bottom: 50px;
-            font-weight: 300;
-        }
-
-        .btn {
-            background: white;
-            color: #ff6b35;
-            border: none;
-            padding: 18px 50px;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            margin: 10px 0;
-            width: 100%;
-            max-width: 320px;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
-        }
-
-        .btn-secondary:hover {
-            background: white;
-            color: #ff6b35;
-        }
-
-        /* Onboarding Pages */
-        .onboarding-page {
-            justify-content: space-between;
-            text-align: center;
-            background: white;
-            padding: 60px 40px 40px;
-        }
-
-        .onboarding-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .onboarding-icon {
-            width: 180px;
-            height: 180px;
-            background: linear-gradient(135deg, #ff6b35, #f7931e);
-            border-radius: 50%;
-            margin: 0 auto 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.3);
-        }
-
-        .onboarding-icon i {
-            font-size: 70px;
-            color: white;
-        }
-
-        .onboarding-title {
-            font-size: 28px;
-            color: #2c2c2c;
-            margin-bottom: 20px;
-            font-weight: 700;
-        }
-
-        .onboarding-text {
-            font-size: 16px;
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 40px;
-            max-width: 300px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .dots {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 40px;
-        }
-
-        .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #e0e0e0;
-            margin: 0 8px;
-            transition: all 0.3s ease;
-        }
-
-        .dot.active {
-            background: #ff6b35;
-            width: 40px;
-            border-radius: 20px;
-        }
-
-        /* Form Pages */
-        .form-page {
-            padding: 60px 40px;
-            justify-content: center;
-            background: white;
-        }
-
-        .form-header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .form-header h2 {
-            color: #2c2c2c;
-            font-size: 28px;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .form-header p {
-            color: #666;
-            font-size: 16px;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        label {
-            display: block;
-            color: #2c2c2c;
-            font-weight: 600;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 18px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: #f9f9f9;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: #ff6b35;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
-        }
-
-        /* Profile Setup */
-        .profile-setup {
-            text-align: center;
-        }
-
-        .profile-photo {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ff6b35, #f7931e);
-            margin: 0 auto 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 15px 30px rgba(255, 107, 53, 0.3);
-        }
-
-        .profile-photo:hover {
-            transform: scale(1.05);
-        }
-
-        .profile-photo i {
-            font-size: 50px;
-            color: white;
-        }
-
-        .profile-photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Loading Page */
-        .loading-page {
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
-            color: white;
-            text-align: center;
+            color: #8b5a9e;
         }
 
         .spinner {
-            width: 100px;
-            height: 100px;
-            border: 6px solid rgba(255,255,255,0.3);
-            border-top: 6px solid white;
+            width: 60px;
+            height: 60px;
+            border: 4px solid #f3d5e8;
+            border-top: 4px solid #d63384;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
 
         @keyframes spin {
@@ -298,651 +57,1165 @@
             100% { transform: rotate(360deg); }
         }
 
-        .loading-text {
-            font-size: 24px;
-            margin-bottom: 15px;
+        /* Autenticación */
+        .auth-container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .logo {
+            margin-bottom: 2rem;
+        }
+
+        .logo i {
+            font-size: 3rem;
+            color: #d63384;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo h1 {
+            color: #8b5a9e;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .tagline {
+            color: #6c757d;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .auth-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #d63384 0%, #b44d72 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
             font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(214, 51, 132, 0.3);
         }
 
-        .loading-subtext {
-            font-size: 16px;
-            opacity: 0.8;
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(214, 51, 132, 0.4);
         }
 
-        /* Main App */
-        .main-app {
-            padding: 0;
-            background: #000;
+        .btn-secondary {
+            background: transparent;
+            color: #d63384;
+            border: 2px solid #d63384;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #d63384;
+            color: white;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .auth-form.hidden {
+            display: none;
+        }
+
+        .input-field {
+            padding: 15px 20px;
+            border: 2px solid #f3d5e8;
+            border-radius: 50px;
+            font-size: 1rem;
+            background: white;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #d63384;
+        }
+
+        /* Contenedor de contraseña */
+        .password-container {
             position: relative;
         }
 
-        .video-container {
+        .password-input {
+            padding-right: 50px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8b5a9e;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .password-toggle:hover {
+            color: #d63384;
+        }
+
+        .password-toggle.hidden {
+            color: #ccc;
+        }
+
+        /* Onboarding */
+        #onboarding-screen {
+            background: linear-gradient(135deg, #ffeef8 0%, #f8e8ff 100%);
+        }
+
+        .onboarding-slide {
+            display: none;
             width: 100%;
-            height: calc(100vh - 80px);
-            background: linear-gradient(45deg, #1a1a1a, #2d2d2d);
-            position: relative;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .onboarding-slide.active {
+            display: flex;
+        }
+
+        .onboarding-container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .onboarding-container h2 {
+            color: #8b5a9e;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .onboarding-container p {
+            color: #6c757d;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .age-selector {
+            margin: 2rem 0;
+        }
+
+        .age-input-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 18px;
-            overflow: hidden;
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
 
-        .live-indicator {
-            position: absolute;
-            top: 30px;
-            left: 30px;
-            background: #ff3333;
-            color: white;
-            padding: 8px 16px;
+        .modern-age-input {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #f3d5e8;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            background: white;
+            color: #8b5a9e;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(214, 51, 132, 0.1);
+        }
+
+        .modern-age-input:focus {
+            border-color: #d63384;
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(214, 51, 132, 0.2);
+        }
+
+        .age-label {
+            font-size: 1.2rem;
+            color: #8b5a9e;
+            font-weight: 600;
+        }
+
+        .age-suggestions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .age-btn {
+            background: white;
+            border: 2px solid #f3d5e8;
+            color: #8b5a9e;
+            padding: 12px 20px;
             border-radius: 25px;
-            font-size: 14px;
-            font-weight: bold;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(214, 51, 132, 0.1);
+        }
+
+        .age-btn:hover {
+            background: #d63384;
+            color: white;
+            border-color: #d63384;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(214, 51, 132, 0.3);
+        }
+
+        .age-btn.selected {
+            background: #d63384;
+            color: white;
+            border-color: #d63384;
+            box-shadow: 0 4px 15px rgba(214, 51, 132, 0.3);
+        }
+
+        .feature-icon i {
+            font-size: 4rem;
+            color: #d63384;
+            margin-bottom: 1rem;
+        }
+
+        .features-list {
+            list-style: none;
+            text-align: left;
+            margin: 2rem 0;
+        }
+
+        .features-list li {
+            padding: 0.5rem 0;
+            color: #6c757d;
+        }
+
+        .features-list i {
+            color: #28a745;
+            margin-right: 0.5rem;
+        }
+
+        .username-input {
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .username-prefix {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8b5a9e;
+            font-weight: 600;
+            z-index: 1;
+        }
+
+        .username-field {
+            padding-left: 40px;
+        }
+
+        .profile-upload {
+            margin: 2rem 0;
+        }
+
+        .profile-placeholder {
+            width: 120px;
+            height: 120px;
+            border: 3px dashed #d63384;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .profile-placeholder:hover {
+            background: #ffeef8;
+            border-color: #b44d72;
+        }
+
+        .profile-placeholder i {
+            font-size: 2rem;
+            color: #d63384;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-placeholder p {
+            color: #8b5a9e;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Pantalla Principal */
+        #main-screen {
+            flex-direction: column;
+            padding: 0;
+            background: black;
+        }
+
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .logo-small {
             display: flex;
             align-items: center;
-            gap: 8px;
-            z-index: 10;
+            color: white;
+            font-weight: 700;
         }
 
-        .live-indicator::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: white;
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
+        .logo-small i {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+            color: #d63384;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+        .header-actions {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .header-actions i {
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .header-actions i:hover {
+            color: #d63384;
+        }
+
+        /* Container de Videos */
+        .video-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            margin-top: 70px;
+            margin-bottom: 80px;
+        }
+
+        .video-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #2c1810, #3d2817);
+            display: none;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .video-slide.active {
+            display: block;
+            transform: translateY(0);
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .video-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
         }
 
         .video-overlay {
             position: absolute;
-            bottom: 120px;
-            left: 30px;
-            right: 80px;
-            z-index: 5;
-        }
-
-        .streamer-info {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .streamer-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #ff6b35, #f7931e);
-            margin-right: 15px;
-            border: 3px solid white;
-        }
-
-        .streamer-details h3 {
-            color: white;
-            font-weight: bold;
-            font-size: 16px;
-            margin-bottom: 2px;
-        }
-
-        .streamer-details span {
-            color: rgba(255,255,255,0.7);
-            font-size: 12px;
-        }
-
-        .video-description {
-            color: white;
-            font-size: 14px;
-            line-height: 1.4;
-            margin-bottom: 20px;
-            background: rgba(0,0,0,0.3);
-            padding: 10px 15px;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-        }
-
-        .interaction-buttons {
-            position: absolute;
-            right: 20px;
-            bottom: 140px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            z-index: 10;
-        }
-
-        .interaction-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .interaction-btn:hover {
-            background: #ff6b35;
-            transform: scale(1.1);
-        }
-
-        .interaction-btn.liked {
-            background: #ff3333;
-            color: white;
-        }
-
-        /* Bottom Navigation */
-        .bottom-nav {
-            position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            background: white;
+            padding: 2rem 1.5rem;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            color: white;
             display: flex;
-            justify-content: space-around;
-            padding: 15px 0 25px;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
-            z-index: 20;
+            justify-content: space-between;
+            align-items: flex-end;
         }
 
-        .nav-item {
+        .streamer-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #d63384;
+        }
+
+        .streamer-details h4 {
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .streamer-details p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .follow-btn {
+            background: #d63384;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .follow-btn:hover {
+            background: #b44d72;
+        }
+
+        .video-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: white;
             display: flex;
             flex-direction: column;
             align-items: center;
+            gap: 0.3rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            padding: 8px 15px;
-            color: #999;
+            transition: color 0.3s ease;
         }
 
-        .nav-item:hover {
-            transform: translateY(-2px);
+        .action-btn:hover {
+            color: #d63384;
         }
 
-        .nav-item.active {
-            color: #ff6b35;
+        .action-btn i {
+            font-size: 1.8rem;
         }
 
-        .nav-icon {
-            font-size: 24px;
-            margin-bottom: 6px;
+        .action-btn span {
+            font-size: 0.8rem;
+            font-weight: 600;
         }
 
-        .nav-label {
-            font-size: 12px;
-            font-weight: 500;
+        /* Navegación Inferior */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid rgba(214, 51, 132, 0.2);
+            z-index: 100;
         }
 
-        .nav-item.stream-btn {
-            background: #ff6b35;
+        .nav-btn {
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            color: #8b5a9e;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
+        }
+
+        .nav-btn.active {
+            color: #d63384;
+        }
+
+        .nav-btn:hover {
+            color: #d63384;
+        }
+
+        .nav-btn i {
+            font-size: 1.3rem;
+        }
+
+        .nav-btn span {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .stream-btn {
+            background: linear-gradient(135deg, #d63384 0%, #b44d72 100%);
             color: white;
             border-radius: 50%;
             width: 60px;
             height: 60px;
             margin-top: -10px;
+            box-shadow: 0 4px 15px rgba(214, 51, 132, 0.4);
         }
 
-        .nav-item.stream-btn:hover {
-            background: #ff5722;
+        .stream-btn:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(214, 51, 132, 0.5);
         }
 
-        /* Swipe Animation */
-        .swipe-hint {
-            position: absolute;
-            bottom: 200px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255,255,255,0.6);
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: bounce 2s infinite;
+        .stream-btn i {
+            font-size: 1.5rem;
         }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateX(-50%) translateY(0);
-            }
-            40% {
-                transform: translateX(-50%) translateY(-10px);
-            }
-            60% {
-                transform: translateX(-50%) translateY(-5px);
-            }
+        .stream-btn span {
+            display: none;
         }
 
-        /* Responsive Design */
-        @media (max-width: 480px) {
-            .auth-page, .onboarding-page, .form-page {
-                padding: 40px 20px;
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .main-header {
+                padding: 0.8rem 1rem;
             }
             
-            .onboarding-icon {
-                width: 150px;
-                height: 150px;
+            .video-overlay {
+                padding: 1.5rem 1rem;
             }
             
-            .onboarding-title {
-                font-size: 24px;
+            .bottom-nav {
+                padding: 0.8rem 0;
             }
+            
+            .nav-btn {
+                padding: 0.3rem 0.5rem;
+            }
+            
+            .nav-btn span {
+                font-size: 0.6rem;
+            }
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .onboarding-container {
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Gestos táctiles */
+        .video-container {
+            touch-action: pan-y;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Página de Autenticación -->
-        <div id="auth" class="page auth-page active">
+    <!-- Pantalla de Carga -->
+    <div id="loading-screen" class="screen active">
+        <div class="spinner"></div>
+        <p>Cargando LiveStream...</p>
+    </div>
+
+    <!-- Pantalla de Autenticación -->
+    <div id="auth-screen" class="screen">
+        <div class="auth-container">
             <div class="logo">
                 <i class="fas fa-video"></i>
+                <h1>LiveStream</h1>
             </div>
-            <h1>StreamLive</h1>
-            <p class="subtitle">Transmite en vivo y conecta con el mundo</p>
-            <button class="btn" onclick="goToOnboarding()">Comenzar</button>
-            <button class="btn btn-secondary" onclick="goToLogin()">Ya tengo cuenta</button>
-        </div>
-
-        <!-- Página de Login -->
-        <div id="login" class="page form-page">
-            <div class="form-header">
-                <h2>Iniciar Sesión</h2>
-                <p>Ingresa tus datos para acceder a tu cuenta</p>
-            </div>
-            <form onsubmit="submitLogin(); return false;">
-                <div class="form-group">
-                    <label for="email">
-                        <i class="fas fa-envelope"></i> Correo electrónico:
-                    </label>
-                    <input type="email" id="email" placeholder="tu@email.com" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">
-                        <i class="fas fa-lock"></i> Contraseña:
-                    </label>
-                    <input type="password" id="password" placeholder="Tu contraseña" required>
-                </div>
-                <button type="submit" class="btn">Iniciar Sesión</button>
-                <button type="button" class="btn btn-secondary" onclick="goToPage('auth')">Volver</button>
-            </form>
-        </div>
-
-        <!-- Onboarding 1: ¿Qué es StreamLive? -->
-        <div id="onboarding1" class="page onboarding-page">
-            <div class="onboarding-content">
-                <div class="onboarding-icon">
-                    <i class="fas fa-video"></i>
-                </div>
-                <h2 class="onboarding-title">¡Bienvenido a StreamLive!</h2>
-                <p class="onboarding-text">La plataforma donde puedes transmitir en vivo, compartir momentos únicos y conectar con una audiencia global.</p>
-            </div>
-            <div class="dots">
-                <div class="dot active"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-            </div>
-            <button class="btn" onclick="goToPage('onboarding2')">Continuar</button>
-        </div>
-
-        <!-- Onboarding 2: Transmite en Vivo -->
-        <div id="onboarding2" class="page onboarding-page">
-            <div class="onboarding-content">
-                <div class="onboarding-icon">
-                    <i class="fas fa-broadcast-tower"></i>
-                </div>
-                <h2 class="onboarding-title">Transmite en Tiempo Real</h2>
-                <p class="onboarding-text">Comparte tu talento, enseña algo nuevo, o simplemente charla con tu audiencia. ¡Las posibilidades son infinitas!</p>
-            </div>
-            <div class="dots">
-                <div class="dot"></div>
-                <div class="dot active"></div>
-                <div class="dot"></div>
-            </div>
-            <button class="btn" onclick="goToPage('onboarding3')">Siguiente</button>
-        </div>
-
-        <!-- Onboarding 3: Descubre Contenido -->
-        <div id="onboarding3" class="page onboarding-page">
-            <div class="onboarding-content">
-                <div class="onboarding-icon">
-                    <i class="fas fa-star"></i>
-                </div>
-                <h2 class="onboarding-title">Descubre Contenido Increíble</h2>
-                <p class="onboarding-text">Desliza para descubrir transmisiones en vivo de creadores de todo el mundo. Encuentra tu próxima obsesión.</p>
-            </div>
-            <div class="dots">
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot active"></div>
-            </div>
-            <button class="btn" onclick="goToPage('age')">¡Empezar!</button>
-        </div>
-
-        <!-- Página de Edad -->
-        <div id="age" class="page form-page">
-            <div class="form-header">
-                <h2>¿Cuál es tu edad?</h2>
-                <p>Necesitamos verificar tu edad para personalizar tu experiencia</p>
-            </div>
-            <form onsubmit="submitAge(); return false;">
-                <div class="form-group">
-                    <label for="birthdate">
-                        <i class="fas fa-calendar"></i> Fecha de nacimiento:
-                    </label>
-                    <input type="date" id="birthdate" required>
-                </div>
-                <button type="submit" class="btn">Continuar</button>
-            </form>
-        </div>
-
-        <!-- Página de Usuario y Foto -->
-        <div id="username" class="page form-page">
-            <div class="form-header">
-                <h2>Completa tu perfil</h2>
-                <p>Así te reconocerán otros usuarios</p>
-            </div>
-            <form onsubmit="submitProfile(); return false;" class="profile-setup">
-                <div class="profile-photo" onclick="document.getElementById('photo-input').click()">
-                    <input type="file" id="photo-input" accept="image/*" style="display: none;" onchange="previewPhoto(this)">
-                    <i class="fas fa-camera"></i>
-                </div>
-                <div class="form-group">
-                    <label for="username-input">
-                        <i class="fas fa-at"></i> Nombre de usuario:
-                    </label>
-                    <input type="text" id="username-input" placeholder="tu_usuario" required>
-                </div>
-                <div class="form-group">
-                    <label for="display-name">
-                        <i class="fas fa-user"></i> Nombre para mostrar:
-                    </label>
-                    <input type="text" id="display-name" placeholder="Tu nombre completo" required>
-                </div>
-                <button type="submit" class="btn">Crear perfil</button>
-            </form>
-        </div>
-
-        <!-- Página de Carga -->
-        <div id="loading" class="page loading-page">
-            <div class="spinner"></div>
-            <div class="loading-text">Creando tu cuenta...</div>
-            <div class="loading-subtext">Esto solo tomará unos segundos</div>
-        </div>
-
-        <!-- Página Principal -->
-        <div id="main" class="page main-app">
-            <div class="video-container" id="videoContainer">
-                <div class="live-indicator">EN VIVO</div>
-                <div class="swipe-hint">
-                    <i class="fas fa-arrow-up"></i> Desliza hacia arriba
-                </div>
-                <div class="video-overlay">
-                    <div class="streamer-info">
-                        <div class="streamer-avatar"></div>
-                        <div class="streamer-details">
-                            <h3 id="streamer-name">@maria_streams</h3>
-                            <span id="streamer-time">hace 5 min</span>
-                        </div>
-                    </div>
-                    <div class="video-description" id="video-description">
-                        Pintando un atardecer en tiempo real | Sígueme para más arte
-                    </div>
-                </div>
-                <div class="interaction-buttons">
-                    <button class="interaction-btn" onclick="likeStream(this)">
-                        <i class="far fa-heart"></i>
-                    </button>
-                    <button class="interaction-btn" onclick="shareStream()">
-                        <i class="fas fa-share"></i>
-                    </button>
-                    <button class="interaction-btn" onclick="commentStream()">
-                        <i class="far fa-comment"></i>
-                    </button>
-                </div>
+            <p class="tagline">Transmite tu mundo en vivo</p>
+            
+            <div class="auth-buttons">
+                <button class="btn-primary" onclick="showLogin()">Iniciar Sesión</button>
+                <button class="btn-secondary" onclick="showRegister()">Registrarse</button>
             </div>
 
-            <div class="bottom-nav">
-                <div class="nav-item active" onclick="switchTab('inicio', this)">
-                    <div class="nav-icon"><i class="fas fa-home"></i></div>
-                    <div class="nav-label">Inicio</div>
+            <!-- Formulario de Login -->
+            <div id="login-form" class="auth-form hidden">
+                <input type="email" id="login-email" placeholder="Correo electrónico" class="input-field">
+                <div class="password-container">
+                    <input type="password" id="login-password" placeholder="Contraseña" class="input-field password-input">
+                    <i class="fas fa-eye password-toggle" onclick="togglePassword('login-password', this)"></i>
                 </div>
-                <div class="nav-item" onclick="switchTab('tendencias', this)">
-                    <div class="nav-icon"><i class="fas fa-fire"></i></div>
-                    <div class="nav-label">Tendencias</div>
+                <button class="btn-primary" onclick="loginUser()">Entrar</button>
+            </div>
+
+            <!-- Formulario de Registro -->
+            <div id="register-form" class="auth-form hidden">
+                <input type="text" id="register-name" placeholder="Nombre completo" class="input-field">
+                <input type="email" id="register-email" placeholder="Correo electrónico" class="input-field">
+                <div class="password-container">
+                    <input type="password" id="register-password" placeholder="Contraseña" class="input-field password-input">
+                    <i class="fas fa-eye password-toggle" onclick="togglePassword('register-password', this)"></i>
                 </div>
-                <div class="nav-item stream-btn" onclick="startStream()">
-                    <div class="nav-icon"><i class="fas fa-plus"></i></div>
-                </div>
-                <div class="nav-item" onclick="switchTab('configuracion', this)">
-                    <div class="nav-icon"><i class="fas fa-cog"></i></div>
-                    <div class="nav-label">Config</div>
-                </div>
+                <button class="btn-primary" onclick="registerUser()">Crear Cuenta</button>
             </div>
         </div>
     </div>
 
+    <!-- Pantallas de Onboarding -->
+    <div id="onboarding-screen" class="screen">
+        <!-- Slide 1: Edad -->
+        <div id="age-slide" class="onboarding-slide active">
+            <div class="onboarding-container">
+                <h2>¿Cuál es tu edad?</h2>
+                <p>Esto nos ayuda a personalizar tu experiencia</p>
+                <div class="age-selector">
+                    <div class="age-input-container">
+                        <input type="number" id="user-age" min="13" max="100" placeholder="18" class="modern-age-input">
+                        <label class="age-label">años</label>
+                    </div>
+                    <div class="age-suggestions">
+                        <button class="age-btn" onclick="setAge(18)">18</button>
+                        <button class="age-btn" onclick="setAge(25)">25</button>
+                        <button class="age-btn" onclick="setAge(30)">30</button>
+                        <button class="age-btn" onclick="setAge(35)">35+</button>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="saveAgeAndNext()">Continuar</button>
+            </div>
+        </div>
+
+        <!-- Slide 2: Información de la App -->
+        <div id="info-slide" class="onboarding-slide">
+            <div class="onboarding-container">
+                <div class="feature-icon">
+                    <i class="fas fa-broadcast-tower"></i>
+                </div>
+                <h2>Transmite en Vivo</h2>
+                <p>Comparte tus momentos favoritos con el mundo. Transmite en tiempo real y conecta con tu audiencia.</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-check"></i> Transmisión HD en tiempo real</li>
+                    <li><i class="fas fa-check"></i> Chat interactivo</li>
+                    <li><i class="fas fa-check"></i> Efectos y filtros</li>
+                </ul>
+                <button class="btn-primary" onclick="nextSlide()">Siguiente</button>
+            </div>
+        </div>
+
+        <!-- Slide 3: Nombre de Usuario -->
+        <div id="username-slide" class="onboarding-slide">
+            <div class="onboarding-container">
+                <h2>Elige tu nombre de usuario</h2>
+                <p>Este será tu identificador único en la plataforma</p>
+                <div class="username-input">
+                    <span class="username-prefix">@</span>
+                    <input type="text" id="user-username" placeholder="nombreusuario" class="input-field username-field">
+                </div>
+                <button class="btn-primary" onclick="saveUsernameAndNext()">Continuar</button>
+            </div>
+        </div>
+
+        <!-- Slide 4: Foto de Perfil -->
+        <div id="profile-slide" class="onboarding-slide">
+            <div class="onboarding-container">
+                <h2>Agrega tu foto de perfil</h2>
+                <p>Ayuda a otros a reconocerte</p>
+                <div class="profile-upload">
+                    <div class="profile-placeholder">
+                        <i class="fas fa-camera"></i>
+                        <p>Toca para agregar foto</p>
+                    </div>
+                    <input type="file" id="profile-pic" accept="image/*" style="display: none;">
+                </div>
+                <button class="btn-primary" onclick="saveProfileAndFinish()">Empezar a Transmitir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pantalla Principal -->
+    <div id="main-screen" class="screen">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="logo-small">
+                <i class="fas fa-video"></i>
+                <span>LiveStream</span>
+            </div>
+            <div class="header-actions">
+                <i class="fas fa-search"></i>
+                <i class="fas fa-bell"></i>
+            </div>
+        </header>
+
+        <!-- Video Container (swipeable) -->
+        <div class="video-container" id="videoContainer">
+            <div class="video-slide active" data-video="1">
+                <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                    <p>Video en Vivo #1</p>
+                </div>
+                <div class="video-overlay">
+                    <div class="streamer-info">
+                        <img src="https://via.placeholder.com/40" class="avatar">
+                        <div class="streamer-details">
+                            <h4>@usuario1</h4>
+                            <p>Transmitiendo música 🎵</p>
+                        </div>
+                        <button class="follow-btn">Seguir</button>
+                    </div>
+                    <div class="video-actions">
+                        <button class="action-btn">
+                            <i class="fas fa-heart"></i>
+                            <span>1.2k</span>
+                        </button>
+                        <button class="action-btn">
+                            <i class="fas fa-comment"></i>
+                            <span>89</span>
+                        </button>
+                        <button class="action-btn">
+                            <i class="fas fa-share"></i>
+                            <span>Share</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-slide" data-video="2">
+                <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                    <p>Video en Vivo #2</p>
+                </div>
+                <div class="video-overlay">
+                    <div class="streamer-info">
+                        <img src="https://via.placeholder.com/40" class="avatar">
+                        <div class="streamer-details">
+                            <h4>@usuario2</h4>
+                            <p>Jugando videojuegos 🎮</p>
+                        </div>
+                        <button class="follow-btn">Seguir</button>
+                    </div>
+                    <div class="video-actions">
+                        <button class="action-btn">
+                            <i class="fas fa-heart"></i>
+                            <span>856</span>
+                        </button>
+                        <button class="action-btn">
+                            <i class="fas fa-comment"></i>
+                            <span>42</span>
+                        </button>
+                        <button class="action-btn">
+                            <i class="fas fa-share"></i>
+                            <span>Share</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-slide" data-video="3">
+                <div class="video-placeholder">
+                    <i class="fas fa-play-circle"></i>
+                    <p>Video en Vivo #3</p>
+                </div>
+                <div class="video-overlay">
+                    <div class="streamer-info">
+                        <img src="https://via.placeholder.com/40" class="avatar">
+                        <div class="streamer-details">
+                            <h4>@usuario3</h4>
+                            <p>Cocinando recetas 👩‍🍳</p>
+                        </div>
+                        <button class="follow-btn">Seguir</button>
+                    </div>
+                    <div class="video-actions">
+                        <button class="action-btn">
+                            <i class="fas fa-heart"></i>
+                            <span>2.1k</span>
+                        </button>
+                        <button class="action-btn">
+                            <i class="fas fa-comment"></i>
+                            <span>156</span>
+                        </button>
+                        <button class="action-btn">
+                            <i class="fas fa-share"></i>
+                            <span>Share</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barra de Navegación Inferior -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-tab="inicio">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+            </button>
+            <button class="nav-btn" data-tab="tendencias">
+                <i class="fas fa-fire"></i>
+                <span>Tendencias</span>
+            </button>
+            <button class="nav-btn stream-btn">
+                <i class="fas fa-plus"></i>
+            </button>
+            <button class="nav-btn" data-tab="inbox">
+                <i class="fas fa-inbox"></i>
+                <span>Inbox</span>
+            </button>
+            <button class="nav-btn" data-tab="perfil">
+                <i class="fas fa-user"></i>
+                <span>Perfil</span>
+            </button>
+        </nav>
+    </div>
+
     <script>
-        let currentStream = 0;
-        const streams = [
-            {
-                user: "@maria_streams",
-                description: "Pintando un atardecer en tiempo real | Sígueme para más arte",
-                time: "hace 5 min"
-            },
-            {
-                user: "@cooking_master",
-                description: "Preparando pasta italiana casera | ¡Pregúntame cualquier cosa!",
-                time: "hace 12 min"
-            },
-            {
-                user: "@music_vibes",
-                description: "Sesión de guitarra acústica | Toma requests en los comentarios",
-                time: "hace 2 min"
-            },
-            {
-                user: "@fitness_guru",
-                description: "Rutina de ejercicios matutina | Entrena conmigo desde casa",
-                time: "hace 18 min"
-            }
-        ];
+        // Estado de la aplicación
+        let currentSlide = 0;
+        let currentVideo = 0;
+        const totalVideos = 3;
+        let userData = {
+            age: null,
+            username: null,
+            profilePic: null,
+            email: null,
+            name: null
+        };
 
-        function goToPage(pageId) {
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                hideScreen('loading-screen');
+                showScreen('auth-screen');
+            }, 2000);
+
+            initializeSwipeGestures();
+            initializeNavigation();
+            initializeProfileUpload();
+        });
+
+        // Gestión de pantallas
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
             });
-            document.getElementById(pageId).classList.add('active');
+            document.getElementById(screenId).classList.add('active');
         }
 
-        function goToOnboarding() {
-            goToPage('onboarding1');
+        function hideScreen(screenId) {
+            document.getElementById(screenId).classList.remove('active');
         }
 
-        function goToLogin() {
-            goToPage('login');
+        // Funcionalidad del ojito para contraseñas
+        function togglePassword(inputId, icon) {
+            const input = document.getElementById(inputId);
+            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+            input.setAttribute('type', type);
+            
+            // Cambiar icono
+            if (type === 'text') {
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+                icon.classList.add('hidden');
+            } else {
+                icon.classList.remove('fa-eye-slash', 'hidden');
+                icon.classList.add('fa-eye');
+            }
         }
 
-        function submitAge() {
-            const birthdate = document.getElementById('birthdate').value;
-            if (!birthdate) {
-                alert('Por favor selecciona tu fecha de nacimiento');
+        // Autenticación
+        function showLogin() {
+            document.getElementById('login-form').classList.remove('hidden');
+            document.getElementById('register-form').classList.add('hidden');
+        }
+
+        function showRegister() {
+            document.getElementById('register-form').classList.remove('hidden');
+            document.getElementById('login-form').classList.add('hidden');
+        }
+
+        // Registro simulado (sin Firebase)
+        function registerUser() {
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            
+            if (!name || !email || !password) {
+                alert('Por favor completa todos los campos');
                 return;
             }
-            goToPage('username');
+            
+            userData.email = email;
+            userData.name = name;
+            
+            startOnboarding();
         }
 
-        function submitLogin() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+        // Login simulado (sin Firebase)
+        function loginUser() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
             
             if (!email || !password) {
                 alert('Por favor completa todos los campos');
                 return;
             }
             
-            // Simular validación de login
-            goToPage('loading');
-            setTimeout(() => {
-                goToPage('main');
-            }, 2000);
+            userData.email = email;
+            
+            // Ir directamente a la app principal
+            showScreen('main-screen');
+            initializeMainApp();
         }
 
-        function submitProfile() {
-            const username = document.getElementById('username-input').value;
-            const displayName = document.getElementById('display-name').value;
-            
-            if (!username || !displayName) {
-                alert('Por favor completa todos los campos');
+        function startOnboarding() {
+            showScreen('onboarding-screen');
+            showSlide('age-slide');
+        }
+
+        // Onboarding
+        function showSlide(slideId) {
+            document.querySelectorAll('.onboarding-slide').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            document.getElementById(slideId).classList.add('active');
+        }
+
+        // Funciones mejoradas para selector de edad
+        function setAge(age) {
+            document.getElementById('user-age').value = age;
+            // Efecto visual
+            document.querySelectorAll('.age-btn').forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+        }
+
+        function saveAgeAndNext() {
+            const age = document.getElementById('user-age').value;
+            if (!age || age < 13) {
+                alert('Por favor ingresa una edad válida (mínimo 13 años)');
                 return;
             }
             
-            goToPage('loading');
+            userData.age = age;
+            nextSlide();
+        }
+
+        function nextSlide() {
+            const slides = ['age-slide', 'info-slide', 'username-slide', 'profile-slide'];
+            currentSlide++;
+            
+            if (currentSlide < slides.length) {
+                showSlide(slides[currentSlide]);
+            }
+        }
+
+        function saveUsernameAndNext() {
+            const username = document.getElementById('user-username').value;
+            if (!username || username.length < 3) {
+                alert('El nombre de usuario debe tener al menos 3 caracteres');
+                return;
+            }
+            
+            userData.username = username;
+            nextSlide();
+        }
+
+        function saveProfileAndFinish() {
+            // Mostrar spinner de carga
+            showScreen('loading-screen');
+            
             setTimeout(() => {
-                goToPage('main');
+                showScreen('main-screen');
+                initializeMainApp();
+            }, 1500);
+        }
+
+        // Aplicación Principal
+        function initializeMainApp() {
+            document.getElementById('main-screen').style.display = 'flex';
+            simulateLiveData();
+        }
+
+        // Gestos de deslizar
+        function initializeSwipeGestures() {
+            let startY = 0;
+            let currentY = 0;
+            let isScrolling = false;
+
+            const videoContainer = document.getElementById('videoContainer');
+
+            videoContainer.addEventListener('touchstart', (e) => {
+                startY = e.touches[0].clientY;
+                isScrolling = false;
+            });
+
+            videoContainer.addEventListener('touchmove', (e) => {
+                if (!isScrolling) {
+                    currentY = e.touches[0].clientY;
+                    const deltaY = startY - currentY;
+                    
+                    if (Math.abs(deltaY) > 50) {
+                        isScrolling = true;
+                        
+                        if (deltaY > 0) {
+                            nextVideo();
+                        } else {
+                            previousVideo();
+                        }
+                    }
+                }
+            });
+
+            videoContainer.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                
+                if (e.deltaY > 0) {
+                    nextVideo();
+                } else {
+                    previousVideo();
+                }
+            }, { passive: false });
+        }
+
+        function nextVideo() {
+            const currentSlide = document.querySelector('.video-slide.active');
+            const nextSlide = currentSlide.nextElementSibling || document.querySelector('.video-slide');
+            
+            if (nextSlide && nextSlide !== currentSlide) {
+                currentSlide.classList.remove('active');
+                nextSlide.classList.add('active');
+            }
+        }
+
+        function previousVideo() {
+            const currentSlide = document.querySelector('.video-slide.active');
+            const previousSlide = currentSlide.previousElementSibling || document.querySelector('.video-slide:last-child');
+            
+            if (previousSlide && previousSlide !== currentSlide) {
+                currentSlide.classList.remove('active');
+                previousSlide.classList.add('active');
+            }
+        }
+
+        // Navegación
+        function initializeNavigation() {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (this.classList.contains('stream-btn')) {
+                        startStreaming();
+                        return;
+                    }
+
+                    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const tab = this.dataset.tab;
+                    handleTabChange(tab);
+                });
+            });
+        }
+
+        function handleTabChange(tab) {
+            console.log(`Cambiando a pestaña: ${tab}`);
+            switch(tab) {
+                case 'inicio':
+                    break;
+                case 'tendencias':
+                    break;
+                case 'inbox':
+                    break;
+                case 'perfil':
+                    break;
+            }
+        }
+
+        function startStreaming() {
+            alert('¡Función de transmisión en vivo próximamente! 🎥✨');
+        }
+
+        // Upload de foto de perfil mejorado
+        function initializeProfileUpload() {
+            const placeholder = document.querySelector('.profile-placeholder');
+            const fileInput = document.getElementById('profile-pic');
+            
+            placeholder.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const base64String = e.target.result;
+                        userData.profilePic = base64String;
+                        
+                        placeholder.innerHTML = `<img src="${base64String}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Controles de teclado
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowUp') {
+                previousVideo();
+            } else if (e.key === 'ArrowDown') {
+                nextVideo();
+            }
+        });
+
+        // Simulación de datos en tiempo real
+        function simulateLiveData() {
+            const actionBtns = document.querySelectorAll('.action-btn span');
+            
+            setInterval(() => {
+                actionBtns.forEach(span => {
+                    if (span.textContent.includes('k') || !isNaN(span.textContent)) {
+                        const currentNum = parseInt(span.textContent.replace('k', '')) || 0;
+                        const newNum = currentNum + Math.floor(Math.random() * 5);
+                        span.textContent = newNum > 1000 ? `${(newNum/1000).toFixed(1)}k` : newNum.toString();
+                    }
+                });
             }, 3000);
         }
-
-        function previewPhoto(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const photo = document.querySelector('.profile-photo');
-                    photo.innerHTML = `<img src="${e.target.result}" alt="Profile">`;
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        function switchTab(tab, element) {
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            if (element && !element.classList.contains('stream-btn')) {
-                element.classList.add('active');
-            }
-            
-            if (tab === 'tendencias') {
-                updateStream();
-            }
-        }
-
-        function updateStream() {
-            currentStream = (currentStream + 1) % streams.length;
-            const stream = streams[currentStream];
-            
-            document.getElementById('streamer-name').textContent = stream.user;
-            document.getElementById('streamer-time').textContent = stream.time;
-            document.getElementById('video-description').textContent = stream.description;
-        }
-
-        function likeStream(btn) {
-            const icon = btn.querySelector('i');
-            if (btn.classList.contains('liked')) {
-                btn.classList.remove('liked');
-                icon.className = 'far fa-heart';
-            } else {
-                btn.classList.add('liked');
-                icon.className = 'fas fa-heart';
-                btn.style.transform = 'scale(1.2)';
-                setTimeout(() => {
-                    btn.style.transform = 'scale(1)';
-                }, 200);
-            }
-        }
-
-        function shareStream() {
-            const popup = document.createElement('div');
-            popup.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: white;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-                z-index: 1000;
-                text-align: center;
-            `;
-            popup.innerHTML = '<p style="color: #333; margin-bottom: 10px;">¡Compartiendo transmisión!</p><button onclick="this.parentElement.remove()" style="background: #ff6b35; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;">OK</button>';
-            document.body.appendChild(popup);
-        }
-
-        function commentStream() {
-            const popup = document.createElement('div');
-            popup.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: white;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-                z-index: 1000;
-                text-align: center;
-            `;
-            popup.innerHTML = '<p style="color: #333; margin-bottom: 10px;">Función de comentarios próximamente</p><button onclick="this.parentElement.remove()" style="background: #ff6b35; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;">OK</button>';
-            document.body.appendChild(popup);
-        }
-
-        function startStream() {
-            const popup = document.createElement('div');
-            popup.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: white;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-                z-index: 1000;
-                text-align: center;
-            `;
-            popup.innerHTML = '<p style="color: #333; margin-bottom: 10px;">¡Iniciando tu transmisión en vivo!</p><button onclick="this.parentElement.remove()" style="background: #ff6b35; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;">OK</button>';
-            document.body.appendChild(popup);
-        }
-
-        // Swipe functionality
-        let startY = 0;
-        let currentY = 0;
-
-        document.getElementById('videoContainer').addEventListener('touchstart', (e) => {
-            startY = e.touches[0].clientY;
-        });
-
-        document.getElementById('videoContainer').addEventListener('touchmove', (e) => {
-            currentY = e.touches[0].clientY;
-            e.preventDefault();
-        });
-
-        document.getElementById('videoContainer').addEventListener('touchend', (e) => {
-            const diffY = startY - currentY;
-            if (Math.abs(diffY) > 50) {
-                if (diffY > 0) {
-                    updateStream();
-                } else {
-                    currentStream = (currentStream - 1 + streams.length) % streams.length;
-                    const stream = streams[currentStream];
-                    document.getElementById('streamer-name').textContent = stream.user;
-                    document.getElementById('streamer-time').textContent = stream.time;
-                    document.getElementById('video-description').textContent = stream.description;
-                }
-            }
-        });
-
-        // Auto-advance streams
-        setInterval(() => {
-            if (document.getElementById('main').classList.contains('active')) {
-                updateStream();
-            }
-        }, 15000);
+    </script>
+</body>
+</html>
